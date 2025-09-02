@@ -65,4 +65,47 @@ class AdjustedAverageCalculatorTest {
         List<Integer> numbers = List.of(0, 0, 0, 0, 0);
         assertEquals(0.0, AdjustedAverageCalculator.adjustedAverage(numbers), 0.001);
     }
+
+    @Test
+    void testAllMaxIntegers() {
+        List<Integer> numbers = List.of(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        double expected = ((long) Integer.MAX_VALUE * 5 - Integer.MAX_VALUE - Integer.MAX_VALUE) / 3.0;
+        assertEquals(expected, AdjustedAverageCalculator.adjustedAverage(numbers), 0.001);
+    }
+
+    @Test
+    void testAllMinIntegers() {
+        List<Integer> numbers = List.of(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+        double expected = ((long) Integer.MIN_VALUE * 5 - Integer.MIN_VALUE - Integer.MIN_VALUE) / 3.0;
+        assertEquals(expected, AdjustedAverageCalculator.adjustedAverage(numbers), 0.001);
+    }
+
+    @Test
+    void testMixedMaxAndMinIntegers() {
+        List<Integer> numbers = List.of(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
+        // Remove one MAX and one MIN, remaining: Integer.MAX_VALUE + Integer.MIN_VALUE + 0
+        long remainingSum = (long) Integer.MAX_VALUE + Integer.MIN_VALUE;
+        double expected = remainingSum / 3.0;
+        assertEquals(expected, AdjustedAverageCalculator.adjustedAverage(numbers), 0.001);
+    }
+
+    @Test
+    void testLargePositiveNumbers() {
+        List<Integer> numbers = List.of(1_000_000_000, 1_000_000_001, 1_000_000_002, 1_000_000_003, 1_000_000_004);
+        // Remove min and max: remove 1_000_000_000 and 1_000_000_004
+        long remainingSum = 1_000_000_001L + 1_000_000_002L + 1_000_000_003L;
+        double expected = remainingSum / 3.0;
+        assertEquals(expected, AdjustedAverageCalculator.adjustedAverage(numbers), 0.001);
+    }
+
+    @Test
+    void testNearOverflowSum() {
+        List<Integer> numbers = List.of(Integer.MAX_VALUE, Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 2, Integer.MAX_VALUE - 3, Integer.MAX_VALUE - 4);
+        // Remove min and max: remove MAX_VALUE and MAX_VALUE - 4
+        long remainingSum = (long) (Integer.MAX_VALUE - 1) + (Integer.MAX_VALUE - 2) + (Integer.MAX_VALUE - 3);
+        double expected = remainingSum / 3.0;
+        assertEquals(expected, AdjustedAverageCalculator.adjustedAverage(numbers), 0.001);
+    }
+
+
 }

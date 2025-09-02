@@ -9,7 +9,7 @@ public class AdjustedAverageCalculator {
 
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
-        int sum = 0;
+        long sum = 0;
 
         for (int num : numbers) {
             sum += num;
